@@ -23,7 +23,7 @@ def initialize_database():
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS nutrition (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            name TEXT NOT NULL UNIQUE,
             calories INTEGER NOT NULL,
             proteins REAL NOT NULL,
             fats REAL NOT NULL,
@@ -37,10 +37,12 @@ def initialize_database():
 def insert_data(data):
     conn = get_db_connection()
     cursor = conn.cursor()
+    #cursor.execute('DELETE FROM nutrition')
+    #если забить бд дублями
 
     for item in data:
         cursor.execute('''
-        INSERT INTO nutrition (name, calories, proteins, fats, carbohydrates)
+        INSERT OR IGNORE INTO nutrition (name, calories, proteins, fats, carbohydrates)
         VALUES (?, ?, ?, ?, ?)
         ''', (item["name"], item["calories"], item["proteins"], item["fats"], item["carbohydrates"]))
 
