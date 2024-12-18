@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  flask_app:
+    build:
+      context: ./service
+    container_name: parser_app_container
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./service/nutrition.db:/app/nutrition.db
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
