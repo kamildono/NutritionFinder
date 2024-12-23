@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Finder</title>
+    <style>
+        table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f5f4f4; }
+        .range-input { width: 90%; padding: 5px; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Nutrition Finder</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>
+                    Ккалории<br>
+                    <input type="number" id="calories-min" class="range-input" placeholder="Min">
+                    <input type="number" id="calories-max" class="range-input" placeholder="Max">
+                </th>
+                <th>
+                    Белки<br>
+                    <input type="number" id="protein-min" class="range-input" placeholder="Min">
+                    <input type="number" id="protein-max" class="range-input" placeholder="Max">
+                </th>
+                <th>
+                    Жиры<br>
+                    <input type="number" id="fat-min" class="range-input" placeholder="Min">
+                    <input type="number" id="fat-max" class="range-input" placeholder="Max">
+                </th>
+                <th>
+                    Углеводы<br>
+                    <input type="number" id="carbs-min" class="range-input" placeholder="Min">
+                    <input type="number" id="carbs-max" class="range-input" placeholder="Max">
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }} ккал</td>
+                <td>{{ row[3] }} г</td>
+                <td>{{ row[4] }} г</td>
+                <td>{{ row[5] }} г</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const rows = Array.from(document.querySelectorAll("tbody tr"));
+
+            function filterTable() {
+                const caloriesMin = parseInt(document.getElementById("calories-min").value) || -Infinity;
+                const caloriesMax = parseInt(document.getElementById("calories-max").value) || Infinity;
+                const proteinMin = parseFloat(document.getElementById("protein-min").value) || -Infinity;
+                const proteinMax = parseFloat(document.getElementById("protein-max").value) || Infinity;
+                const fatMin = parseFloat(document.getElementById("fat-min").value) || -Infinity;
+                const fatMax = parseFloat(document.getElementById("fat-max").value) || Infinity;
+                const carbsMin = parseFloat(document.getElementById("carbs-min").value) || -Infinity;
+                const carbsMax = parseFloat(document.getElementById("carbs-max").value) || Infinity;
+
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll("td");
+                    const calories = parseInt(cells[1].textContent) || 0;
+                    const protein = parseFloat(cells[2].textContent) || 0;
+                    const fat = parseFloat(cells[3].textContent) || 0;
+                    const carbs = parseFloat(cells[4].textContent) || 0;
+
+                    if (
+                        calories >= caloriesMin && calories < caloriesMax &&
+                        protein >= proteinMin && protein < proteinMax &&
+                        fat >= fatMin && fat < fatMax &&
+                        carbs >= carbsMin && carbs < carbsMax
+                    ) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            }
+
+            document.querySelectorAll(".range-input").forEach(input => {
+                input.addEventListener("input", filterTable);
+            });
+        });
+    </script>
+</body>
+</html>
